@@ -3,7 +3,9 @@
 # kube-pg-backup-restore
 Backup/restore a Kube-hosted Postgres database to a file
 
-## Backup
+## Option: Postgres running inside a container or Kubernetes cluster
+
+### Backup
 
 Using the following environment variables:
 - `PG_POD` is the Kubernetes pod hosting the Postgres database, which needs to contain the `pg_dump` and `psql` executables
@@ -18,3 +20,23 @@ Using the following environment variables:
 To restore the database using the same set of environment variables
 
 `$ cat $PG_BACKUP | kubectl exec -i $PG_POD -- psql -U $PG_USER -d $PG_DB`
+
+## Option: Postgres running on a remote system, or as a public cloud service (DBaaS)
+
+### Backup via TCP connection
+ 
+In some instances, you either won't have access to the container running Postgres, or Postgres itself may be running as a service. This is a common use case for public cloud services e.g. AWS RDS, AWS Aurora, GCP CloudSQL, Azure Database for Postgres. In this case a different approach can be used.
+ 
+In this case, you need a Postgres client installed somewhere with access to the Postgres instance. Running a Postgres client instance inside a Docker container will often be the best approache.g.:
+
+'$ docker run -v /path/for/backup:/var/pgdata -it --rm --entrypoint pg_dump jbergknoff/postgresql-client -h HOST -U USER -f /var/pg_data/mydump.sql DATABASE`
+
+This command will store a backup of the `DATABASE` database running on `HOST` to the file `/path/for/backup/mydump.sql`. The Postgres user `USER` will need to have the necessary database admin privileges to perform the backup.
+
+If running inside Kubernetes, this same functionality could be implemented as a Kubernetes Batch job and/or potentially triggered via CI. Consult with your DevOps team to get this implemented
+
+### Restore via TCP connection
+
+'$ docker run -v /path/for/backup:/var/pgdata -it --rm --entrypoint psql jbergknoff/postgresql-client -h HOST -U USER DATABASE < /var/pg_data/mydump.sql`
+
+This command is the reverse of the backup option above. It will restore a backup located at `/path/for/backup/mydump.sql` to the `DATABASE` database running on `HOST`. The Postgres user `USER` will need to have the necessary database admin privileges to perform the restore
