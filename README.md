@@ -29,7 +29,7 @@ In some instances, you either won't have access to the container running Postgre
  
 In this case, you need a Postgres client installed somewhere with access to the Postgres instance. Running a Postgres client instance inside a Docker container will often be the best approache.g.:
 
-'$ docker run -v /path/for/backup:/var/pgdata -it --rm --entrypoint pg_dump jbergknoff/postgresql-client -h HOST -U USER -f /var/pg_data/mydump.sql DATABASE`
+`$ docker run -v /path/for/backup:/var/pgdata -it --rm --entrypoint pg_dump jbergknoff/postgresql-client -h HOST -U USER -f /var/pg_data/mydump.sql DATABASE`
 
 This command will store a backup of the `DATABASE` database running on `HOST` to the file `/path/for/backup/mydump.sql`. The Postgres user `USER` will need to have the necessary database admin privileges to perform the backup.
 
@@ -37,6 +37,8 @@ If running inside Kubernetes, this same functionality could be implemented as a 
 
 ### Restore via TCP connection
 
-'$ docker run -v /path/for/backup:/var/pgdata -it --rm --entrypoint psql jbergknoff/postgresql-client -h HOST -U USER DATABASE < /var/pg_data/mydump.sql`
+`$ docker run -v /path/for/backup:/var/pgdata -it --rm --entrypoint psql jbergknoff/postgresql-client -h HOST -U USER DATABASE < /var/pg_data/mydump.sql`
 
-This command is the reverse of the backup option above. It will restore a backup located at `/path/for/backup/mydump.sql` to the `DATABASE` database running on `HOST`. The Postgres user `USER` will need to have the necessary database admin privileges to perform the restore
+This command is the reverse of the backup option above. It will restore a backup located at `/path/for/backup/mydump.sql` to the `DATABASE` database running on `HOST`. The Postgres user `USER` will need to have the necessary database admin privileges to perform the restore.
+
+If this command is run inside a Kubernetes environment, this functionality could be implemented as a Kubernetes Batch job and/or potentially triggered via CI. Consult with your DevOps team to get this implemented.
