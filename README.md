@@ -5,6 +5,8 @@ Backup/restore a Kube-hosted Postgres database to a file
 
 ## Option: Postgres running inside a container or Kubernetes cluster
 
+This approach is ideal when your Postgres (or Postgres-compatible, such as CockroachDB) database is hosted inside containers.
+
 ### Backup
 
 Using the following environment variables:
@@ -23,11 +25,13 @@ To restore the database using the same set of environment variables
 
 ## Option: Postgres running on a remote system, or as a public cloud service (DBaaS)
 
+In some instances, you either won't have access to the container running Postgres, or Postgres itself may be running as a service. This is a common scenario case for public cloud services e.g. AWS RDS, AWS Aurora, GCP CloudSQL, Azure Database for Postgres; you won't have access to a "database server" as such. 
+
+In this case a different approach can be used bo backup/restore over TCP connections.
+
 ### Backup via TCP connection
- 
-In some instances, you either won't have access to the container running Postgres, or Postgres itself may be running as a service. This is a common use case for public cloud services e.g. AWS RDS, AWS Aurora, GCP CloudSQL, Azure Database for Postgres. In this case a different approach can be used.
- 
-In this case, you need a Postgres client installed somewhere with access to the Postgres instance. Running a Postgres client instance inside a Docker container will often be the best approache.g.:
+
+You need a Postgres client installed somewhere with access to the Postgres instance. Running a Postgres client instance inside a Docker container such as `jbergknoff/postgresql-client` will often be the best approach e.g.:
 
 `$ docker run -v /path/for/backup:/var/pgdata -it --rm --entrypoint pg_dump jbergknoff/postgresql-client -h HOST -U USER -f /var/pg_data/mydump.sql DATABASE`
 
