@@ -5,7 +5,7 @@ Backup/restore a Kube-hosted Postgres database to a file
 
 ## Option: Postgres running inside a container or Kubernetes cluster
 
-This approach is ideal when your Postgres (or Postgres-compatible, such as CockroachDB) database is hosted inside containers.
+This approach is ideal when your Postgres (or Postgres-compatible, such as CockroachDB) database is hosted inside containers. As of November 2020, this will often be the case when customers are using on-premise or hybrid clouds with sensitive data that can't be trusted to public cloud vendors.
 
 ### Backup
 
