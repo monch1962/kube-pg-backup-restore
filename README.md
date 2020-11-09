@@ -33,7 +33,7 @@ In this case a different approach can be used bo backup/restore over TCP connect
 
 You need a Postgres client installed somewhere with access to the Postgres instance. Running a Postgres client instance inside a Docker container such as `jbergknoff/postgresql-client` will often be the best approach e.g.:
 
-`$ docker run -v /path/for/backup:/var/pgdata -it --rm --entrypoint pg_dump jbergknoff/postgresql-client -h HOST -U USER -f /var/pgdata/mydump.sql DATABASE`
+`$ docker run -v /path/for/backup:/var/pgdata -it --rm --entrypoint pg_dump jbergknoff/postgresql-client -h $PG_HOST -U $PG_USER -f /var/pgdata/$PG_BACKUP $PG_DB`
 
 This command will store a backup of the `DATABASE` database running on `HOST` to the file `/path/for/backup/mydump.sql`. The Postgres user `USER` will need to have the necessary database admin privileges to perform the backup.
 
@@ -41,7 +41,7 @@ If running inside Kubernetes, this same functionality could be implemented as a 
 
 ### Restore via TCP connection
 
-`$ docker run -v /path/for/backup:/var/pgdata -it --rm --entrypoint psql jbergknoff/postgresql-client -h HOST -U USER DATABASE < /var/pgdata/mydump.sql`
+`$ docker run -v /path/for/backup:/var/pgdata -it --rm --entrypoint psql jbergknoff/postgresql-client -h $HOST -U $PG_USER $PG_DB < /var/pgdata/$PG_BACKUP`
 
 This command is the reverse of the backup option above. It will restore a backup located at `/path/for/backup/mydump.sql` to the `DATABASE` database running on `HOST`. The Postgres user `USER` will need to have the necessary database admin privileges to perform the restore.
 
