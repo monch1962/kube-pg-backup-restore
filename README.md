@@ -28,7 +28,7 @@ To restore the database using the same set of environment variables
 
 In some instances, you either won't have access to the container running Postgres, or Postgres itself may be running as a service. This is a common scenario case for public cloud services e.g. AWS RDS, AWS Aurora, GCP CloudSQL, Azure Database for Postgres; you won't have access to a "database server" as such. 
 
-In this case a different approach can be used bo backup/restore over TCP connections.
+In this case a different approach can be used to backup/restore over TCP connections.
 
 ### Backup via TCP connection
 
